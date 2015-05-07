@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Pirates</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="http://lab.hakim.se/ladda/dist/ladda.min.css">
+        <style>
+            #input, #button {
+                display: block;
+            }
+
+            #input, #result {
+                margin-bottom: 2em;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="result"></div>
+        <input id="input" type="text"/>
+        <button id="button" class="ladda-button" data-style="expand-left" data-size="s"><span class="ladda-label">Submit</span></button>
+        <script src="http://lab.hakim.se/ladda/dist/spin.min.js"></script>
+        <script src="http://lab.hakim.se/ladda/dist/ladda.min.js"></script>
+        <script>
+            var result = function(output) {
+                document.getElementById('result').innerHTML = output;
+            }
+
+            var l = Ladda.create(document.getElementById('button'));
+
+            document.getElementById('button').onclick=function() {
+                var input = document.getElementById('input').value;
+                if (!input) {
+                    result('Please enter the number of pirates.');
+                }
+                else if (isNaN(+input)) {
+                    result('Please enter a valid number.');
+                }
+                else {
+                    l.start();
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function() {
+                        if (xmlhttp.readyState == 4) {
+                            l.stop();
+                            if (xmlhttp.status == 200) {
+                                result('The smallest number of coins that could have been in the treasure chest originally is ' + xmlhttp.responseText);
+                            }
+                            else {
+                                result('An error occured. Please try again.');
+                            }
+                        }
+                    }
+                    xmlhttp.onerror = function() {
+                        l.stop();
+                        result('An error occured. Please try again.');
+                    }
+                    xmlhttp.open('GET', 'http://pirate.azurewebsites.net/api/Pirate/' + input, true);
+                    xmlhttp.send();
+                }
+            };
+        </script>
+    </body>
+</html>
