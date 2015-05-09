@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -36,8 +36,11 @@
                     else if (isNaN(+$scope.pirates)) {
                         $scope.result = 'Pease enter a valid number.';
                     }
+                    else if ($scope.pirates < 2) {
+                        $scope.result = 'You need at least 2 pirates mate!';
+                    }
                     else {
-                        return $http.get('http://pirate.azurewebsites.net/api/Pirate/' + $scope.pirates).success(function(data) {
+                        return $http.get('/api/Pirate/Coins/' + $scope.pirates).success(function(data) {
                             $scope.result = 'The smallest number of coins that could have been in the treasure chest originally is ' + data;
                         }).error(function() {
                             $scope.result = 'An error occured. Please try again.';
